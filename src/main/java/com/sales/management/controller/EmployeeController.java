@@ -29,7 +29,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> updade(@Valid @PathVariable long id, @RequestBody EmployeeDto dto){
+    public ResponseEntity<HttpStatus> update(@Valid @PathVariable long id, @RequestBody EmployeeDto dto){
         employeeService.update(id, dto);
         return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
     }

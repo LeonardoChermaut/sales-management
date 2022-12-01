@@ -27,13 +27,13 @@ public class SaleModel implements Serializable {
     @Column(name= "id")
     private Long id;
 
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
+
     @FutureOrPresent
     @Column(name = "sale_date", nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime saleDate;
-
-    @Column(name = "total_price")
-    private BigDecimal totalPrice;
 
     @ManyToOne
     @JoinColumn(name="product_id", referencedColumnName="id")

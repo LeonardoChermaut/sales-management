@@ -3,13 +3,10 @@ package com.sales.management.service;
 import com.sales.management.dto.SaleDto;
 import com.sales.management.model.SaleModel;
 import com.sales.management.repository.SaleRepository;
-import com.sales.management.repository.EmployeeRepository;
-import com.sales.management.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,12 +15,6 @@ public class SaleService {
 
     @Autowired
     private SaleRepository saleRepository;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
 
     private final ModelMapper mapper = new ModelMapper();
 

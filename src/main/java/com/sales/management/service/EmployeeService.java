@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -29,12 +28,11 @@ public class EmployeeService {
     public EmployeeDto findById(long id) throws IllegalArgumentException {
         return findByIdOrElseThrow(id);
     }
+
     @Transactional
     public void update(long id, EmployeeDto dto)  {
         EmployeeModel model = this.employeeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         model.setName(dto.getName());
-        model.setAverageSale(dto.getAverageSale());
-        model.setTotalSale(dto.getTotalSale());
         employeeRepository.save(model);
     }
 
@@ -54,4 +52,5 @@ public class EmployeeService {
                 .collect(Collectors.toList());
 
     }
+
 }

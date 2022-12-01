@@ -41,7 +41,6 @@ public class ProductService {
 		ProductModel model = this.productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 		model.setName(dto.getName());
 		model.setPrice(dto.getPrice());
-		model.setQuantity(dto.getQuantity());
 		productRepository.save(model);
 	}
 
@@ -55,7 +54,6 @@ public class ProductService {
 		return productRepository.findById(id).map(model ->mapper.map(model, ProductDto.class))
 				.orElseThrow(IllegalArgumentException::new);
 	}
-
 
 }
 
