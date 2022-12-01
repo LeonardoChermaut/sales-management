@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -13,7 +15,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "employee")
-public class Employee {
+public class EmployeeModel  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +25,7 @@ public class Employee {
     private Long id;
     @Column(name= "name")
     private String name;
-    @Column(name= "total_sale")
-    private int totalSale;
-    @Column(name= "average_sale")
-    private int averageSale;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
+    private Set<SaleModel> sales;
 }

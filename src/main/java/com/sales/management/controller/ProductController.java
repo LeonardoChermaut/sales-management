@@ -1,13 +1,13 @@
 package com.sales.management.controller;
 
-import com.sales.management.dto.ProductDTO;
-import com.sales.management.model.Product;
+import com.sales.management.dto.ProductDto;
 import com.sales.management.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,31 +18,31 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> listAll() {
-        return ResponseEntity.ok(productService.getAll());
+    public ResponseEntity<List<ProductDto>> getAll() {
+        return ResponseEntity.ok(productService.listAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> findById(@PathVariable long id){
-        return ResponseEntity.ok(productService.findById(id));
+    public ResponseEntity<ProductDto> findById(@Valid @PathVariable long id){
+        return ResponseEntity.ok().body(productService.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateById(@PathVariable long id, @RequestBody ProductDTO dto){
+    public ResponseEntity<HttpStatus> update(@Valid @PathVariable long id, @RequestBody ProductDto dto){
         productService.updateById(id, dto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProduct(@RequestBody ProductDTO dto){
+    public ResponseEntity<HttpStatus> save(@Valid @RequestBody ProductDto dto){
         productService.save(dto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.accepted().body(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable long id){
+    public ResponseEntity<HttpStatus> delete(@Valid @PathVariable long id){
         productService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
     }
 
 }

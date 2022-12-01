@@ -1,13 +1,14 @@
 package com.sales.management.service;
 
-import com.sales.management.dto.ProductDTO;
-import com.sales.management.model.Product;
+import com.sales.management.dto.ProductDto;
+import com.sales.management.model.ProductModel;
 import com.sales.management.repository.ProductRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class ProductService {
@@ -15,49 +16,46 @@ public class ProductService {
 	@Autowired
 	private ProductRepository productRepository;
 
-	public void save(ProductDTO dto) {
-		Product product = new Product();
-		toDto(dto, product);
-		productRepository.save(product);
+	private final ModelMapper mapper = new ModelMapper();
+
+	@Transactional
+	public void save(ProductDto dto) {
+		ProductModel model = mapper.map(dto, ProductModel.class);
+		productRepository.save(model);
 	}
 
-	public void toDto(ProductDTO dto, Product product){
-		product.setName(dto.getName());
-		product.setPrice(dto.getPrice());
-		product.setQuantity(dto.getQuantity());
+	@Transactional
+	public void deleteById(long id){
+		findByIdOrElseThrow(id);
+		productRepository.deleteById(id);
 	}
 
-	public Product toModel(ProductDTO dto, Product product){
-		dto.setName(product.getName());
-		dto.setPrice(product.getPrice());
-		dto.setQuantity(product.getQuantity());
-
-		return product;
+	@Transactional
+	public List<ProductDto> listAll() {
+		return productRepository.findAll().stream().map(model -> mapper.map(model, ProductDto.class))
+				.collect(Collectors.toList());
 	}
 
-	public void deleteById(long id){productRepository.deleteById(id);}
-
-	public List<Product> getAll() {return productRepository.findAll();}
-
-	public ProductDTO findById(Long id){
-		Optional<Product> product = productRepository.findById(id);
-		Product productOnData;
-		ProductDTO dto = new ProductDTO();
-		if (product.isPresent()){
-			productOnData = product.get();
-			toDto(dto, product.get());
-		}
-		return dto;
+	@Transactional
+	public void updateById(long id, ProductDto dto)  {
+		ProductModel model = this.productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+		model.setName(dto.getName());
+		model.setPrice(dto.getPrice());
+		model.setQuantity(dto.getQuantity());
+		productRepository.save(model);
 	}
 
-	public void updateById(Long id, ProductDTO dto) {
-		Optional<Product> product = productRepository.findById(id);
-		Product productOnBank = new Product();
-		if (product.isPresent()) {
-			productOnBank = product.get();
-			productRepository.save(productOnBank);
-		}
+	@Transactional
+	public ProductDto findById(long id) throws IllegalArgumentException {
+		return findByIdOrElseThrow(id);
 	}
+
+	@Transactional
+	private ProductDto findByIdOrElseThrow(long id) throws IllegalArgumentException{
+		return productRepository.findById(id).map(model ->mapper.map(model, ProductDto.class))
+				.orElseThrow(IllegalArgumentException::new);
+	}
+
 
 }
 

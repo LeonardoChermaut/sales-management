@@ -1,0 +1,23 @@
+package com.sales.management.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Long id;
+    @NotNull
+    private String name;
+    @NotNull
+    private BigDecimal price;
+
+}

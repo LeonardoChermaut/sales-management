@@ -1,13 +1,16 @@
 package com.sales.management.service;
 
-import com.sales.management.dto.EmployeeDTO;
-import com.sales.management.model.Employee;
+import com.sales.management.dto.EmployeeDto;
+import com.sales.management.model.EmployeeModel;
 import com.sales.management.repository.EmployeeRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class EmployeeService {
@@ -15,53 +18,40 @@ public class EmployeeService {
     @Autowired
    private EmployeeRepository employeeRepository;
 
-    public void save(EmployeeDTO dto) {
-        Employee employee = new Employee();
-        toDto(dto, employee);
-        employeeRepository.save(employee);
+    private final ModelMapper mapper = new ModelMapper();
+
+    public void save(EmployeeDto dto) {
+        EmployeeModel model = mapper.map(dto, EmployeeModel.class);
+        employeeRepository.save(model).getId();
     }
 
-    public void toDto(EmployeeDTO dto, Employee employee){
-        employee.setName(dto.getName());
-
+    @Transactional
+    public EmployeeDto findById(long id) throws IllegalArgumentException {
+        return findByIdOrElseThrow(id);
     }
-
-    public Employee toModel(EmployeeDTO dto, Employee employee){
-        dto.setName(employee.getName());
-
-        return employee;
-    }
-
-    public EmployeeDTO findOneEmployee(Long id){
-        Optional<Employee> employee = employeeRepository.findById(id);
-        Employee employeeOnData;
-        EmployeeDTO dto = new EmployeeDTO();
-        if (employee.isPresent()){
-            employeeOnData = employee.get();
-            toDto(dto, employee.get());
-        }
-        return dto;
-    }
-
-    public void update(Long id, EmployeeDTO employeeDTO) {
-        Optional<Employee> employee = employeeRepository.findById(id);
-        Employee employeeOnBank = new Employee();
-
-        if (employee.isPresent()) {
-            employeeOnBank = employee.get();
-            if (employeeDTO.getName() != null) {
-                employeeOnBank.setName(employeeDTO.getName());
-            }
-            employeeRepository.save(employeeOnBank);
-        }
+    @Transactional
+    public void update(long id, EmployeeDto dto)  {
+        EmployeeModel model = this.employeeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        model.setName(dto.getName());
+        model.setAverageSale(dto.getAverageSale());
+        model.setTotalSale(dto.getTotalSale());
+        employeeRepository.save(model);
     }
 
     public void deleteEmployeeById(long id){
+        findByIdOrElseThrow(id);
         employeeRepository.deleteById(id);
     }
 
-    public List<Employee> listAll()
-    {
-        return employeeRepository.findAll();
+    @Transactional
+    private EmployeeDto findByIdOrElseThrow(long id) throws IllegalArgumentException {
+        return employeeRepository.findById(id).map(model -> mapper.map(model, EmployeeDto.class))
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public List<EmployeeDto> listAll() {
+        return employeeRepository.findAll().stream().map(model -> mapper.map(model, EmployeeDto.class))
+                .collect(Collectors.toList());
+
     }
 }

@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -13,7 +16,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product")
-public class Product {
+public class ProductModel  implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name= "id")
@@ -23,12 +29,10 @@ public class Product {
 	private String name;
 
 	@Column(name= "price")
-	private Double price;
+	private BigDecimal price;
 
-	@Column(name="quantity")
-	private int quantity;
-
-
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+	private Set<SaleModel> sales;
 
 }
 
