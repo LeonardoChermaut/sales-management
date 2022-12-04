@@ -4,6 +4,7 @@ import com.sales.management.dto.ProductDto;
 import com.sales.management.model.ProductModel;
 import com.sales.management.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -11,14 +12,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-
-	private final ProductRepository productRepository;
+	@Autowired
+	private  ProductRepository productRepository;
 	private final ModelMapper mapper = new ModelMapper();
-
-	public ProductService(ProductRepository productRepository) {
-		this.productRepository = productRepository;
-	}
-
 	@Transactional
 	public void save(ProductDto dto) {
 		ProductModel model = mapper.map(dto, ProductModel.class);

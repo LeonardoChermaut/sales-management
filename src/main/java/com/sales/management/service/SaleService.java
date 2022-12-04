@@ -1,28 +1,37 @@
 package com.sales.management.service;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.sales.management.dto.SaleDto;
 import com.sales.management.model.SaleModel;
+import com.sales.management.repository.EmployeeRepository;
+import com.sales.management.repository.ProductRepository;
 import com.sales.management.repository.SaleRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@NoArgsConstructor
+@AllArgsConstructor
 public class SaleService {
 
-    private final SaleRepository saleRepository;
+    private SaleRepository saleRepository;
+    private ProductRepository productRepository;
+    private EmployeeRepository employeeRepository;
     private final ModelMapper mapper = new ModelMapper();
 
-    public SaleService(SaleRepository saleRepository) {
-        this.saleRepository = saleRepository;
-    }
-
     @Transactional
+    @JsonDeserialize
     public void save(SaleDto dto) {
         SaleModel model = mapper.map(dto, SaleModel.class);
-        saleRepository.save(model).getId();
+        LocalDateTime date = model.getSaleDate();
+        saleRepository.save(model);
     }
     @Transactional
     public List<SaleDto> listAll() {

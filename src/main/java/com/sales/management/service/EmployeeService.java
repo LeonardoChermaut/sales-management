@@ -4,8 +4,6 @@ import com.sales.management.dto.EmployeeDto;
 import com.sales.management.model.EmployeeModel;
 import com.sales.management.repository.EmployeeRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@ComponentScan("com.sales.management.service")
 public class EmployeeService {
 
     private EmployeeRepository employeeRepository;

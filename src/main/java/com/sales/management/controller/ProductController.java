@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "/product")
-
 public class ProductController {
     
     private final ProductService productService;
