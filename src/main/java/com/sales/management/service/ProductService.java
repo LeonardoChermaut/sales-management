@@ -4,19 +4,20 @@ import com.sales.management.dto.ProductDto;
 import com.sales.management.model.ProductModel;
 import com.sales.management.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class ProductService {
 
-	@Autowired
-	private ProductRepository productRepository;
-
+	private final ProductRepository productRepository;
 	private final ModelMapper mapper = new ModelMapper();
+
+	public ProductService(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
 
 	@Transactional
 	public void save(ProductDto dto) {
@@ -49,7 +50,7 @@ public class ProductService {
 		return findByIdOrElseThrow(id);
 	}
 
-	@Transactional
+
 	private ProductDto findByIdOrElseThrow(long id) throws IllegalArgumentException{
 		return productRepository.findById(id).map(model ->mapper.map(model, ProductDto.class))
 				.orElseThrow(IllegalArgumentException::new);

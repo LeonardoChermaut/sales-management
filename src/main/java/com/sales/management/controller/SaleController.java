@@ -3,21 +3,24 @@ package com.sales.management.controller;
 
 import com.sales.management.dto.SaleDto;
 import com.sales.management.service.SaleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping(value = "/cartitem")
+
 public class SaleController {
 
-    @Autowired
-    private SaleService cartService;
+    private final SaleService cartService;
 
+    public SaleController(SaleService cartService) {
+        this.cartService = cartService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<SaleDto> findById(@Valid @PathVariable Long id){

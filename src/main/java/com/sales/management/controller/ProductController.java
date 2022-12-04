@@ -2,20 +2,24 @@ package com.sales.management.controller;
 
 import com.sales.management.dto.ProductDto;
 import com.sales.management.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping(value = "/product")
-public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+public class ProductController {
+    
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAll() {

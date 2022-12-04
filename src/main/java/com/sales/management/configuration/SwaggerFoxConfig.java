@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 @Configuration
 @EnableSwagger2WebMvc
-public class SwaggerFoxConfig implements SwaggerInterface {
+public class SwaggerFoxConfig {
 
     @Bean
     public Docket api() {
@@ -35,11 +35,4 @@ public class SwaggerFoxConfig implements SwaggerInterface {
                 "License of API", "API license URL", new ArrayList<>());
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
 }
