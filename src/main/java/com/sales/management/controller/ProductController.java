@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/product")
+@RequestMapping(value = "api/v1/product")
 public class ProductController {
     
     private final ProductService productService;

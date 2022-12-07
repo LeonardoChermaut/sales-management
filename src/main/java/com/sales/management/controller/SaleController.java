@@ -1,17 +1,20 @@
 package com.sales.management.controller;
 
-
 import com.sales.management.dto.SaleDto;
 import com.sales.management.service.SaleService;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
-@RequestMapping(value = "/cartitem")
+@RequestMapping(value = "api/v1/cartitem")
 public class SaleController {
 
     private final SaleService cartService;
@@ -33,6 +36,9 @@ public class SaleController {
 
     @PostMapping
     public ResponseEntity<HttpStatus> save(@Valid @RequestBody SaleDto dto){
+       val df = new DecimalFormat("0.00");
+        df.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.getDefault()));
+        df.format(dto.getTotalPrice());
         cartService.save(dto);
         return ResponseEntity.accepted().body(HttpStatus.CREATED);
     }

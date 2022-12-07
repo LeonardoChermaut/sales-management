@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/employee")
+@RequestMapping(value = "api/v1/employee")
 public class EmployeeController {
 
     private final EmployeeService employeeService;

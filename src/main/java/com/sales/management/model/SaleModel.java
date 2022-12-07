@@ -1,5 +1,6 @@
 package com.sales.management.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class SaleModel implements Serializable {
 
     @FutureOrPresent
     @Column(name = "sale_date", nullable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonFormat(pattern= "dd/MM/yyyy HH:mm")
     private LocalDateTime saleDate;
 
     @ManyToOne
