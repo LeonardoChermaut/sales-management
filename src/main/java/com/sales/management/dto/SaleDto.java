@@ -16,8 +16,6 @@ public class SaleDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime saleDate;
@@ -27,9 +25,6 @@ public class SaleDto implements Serializable {
 
     @NotNull
     private Long employeeId;
-
-    @NotNull
-    private String employeeName;
 
     @NotNull
     private Long productId;

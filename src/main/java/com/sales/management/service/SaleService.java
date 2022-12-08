@@ -2,6 +2,7 @@ package com.sales.management.service;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.sales.management.dto.SaleDto;
+import com.sales.management.exception.DataNotFoundException;
 import com.sales.management.model.SaleModel;
 import com.sales.management.repository.EmployeeRepository;
 import com.sales.management.repository.ProductRepository;
@@ -27,14 +28,11 @@ import java.util.stream.Collectors;
 public class SaleService {
 
     private SaleRepository saleRepository;
-    private ProductRepository productRepository;
-    private EmployeeRepository employeeRepository;
     private final ModelMapper mapper = new ModelMapper();
 
     @JsonDeserialize
     public void save(SaleDto dto) {
         SaleModel model = mapper.map(dto, SaleModel.class);
-        LocalDateTime date = model.getSaleDate();
         model.setTotalPrice(bigDecimalToPrice(dto.getTotalPrice()));
         saleRepository.save(model);
     }
@@ -44,22 +42,21 @@ public class SaleService {
                 .collect(Collectors.toList());
     }
 
-    public SaleDto findById(Long id) {
+    public SaleDto findById(Long id) throws DataNotFoundException {
         return findByIdOrElseThrow(id);
     }
 
-    public void deleteById(long id) {
+    public void deleteById(long id) throws DataNotFoundException {
         findByIdOrElseThrow(id);
         saleRepository.deleteById(id);
     }
-    private SaleDto findByIdOrElseThrow(long id) throws IllegalArgumentException {
+    private SaleDto findByIdOrElseThrow(long id) throws DataNotFoundException {
         return saleRepository.findById(id).map(model -> mapper.map(model, SaleDto.class))
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(DataNotFoundException::new);
     }
 
-    public void updateById(long id, SaleDto dto) throws Exception {
-        SaleModel model = this.saleRepository.findById(id).orElseThrow(Exception::new);
-        model.setId(dto.getId());
+    public void updateById(long id, SaleDto dto) throws DataNotFoundException {
+        SaleModel model = this.saleRepository.findById(id).orElseThrow(DataNotFoundException::new);
         model.setSaleDate(dto.getSaleDate());
         model.setTotalPrice(bigDecimalToPrice(dto.getTotalPrice()));
         saleRepository.save(model);

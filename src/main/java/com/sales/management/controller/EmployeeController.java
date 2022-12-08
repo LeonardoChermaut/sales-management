@@ -1,6 +1,8 @@
 package com.sales.management.controller;
 
 import com.sales.management.dto.EmployeeDto;
+import com.sales.management.exception.DataNotFoundException;
+import com.sales.management.model.EmployeeModel;
 import com.sales.management.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,24 +29,23 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDto> findById(@Valid @PathVariable long id){
+    public ResponseEntity<EmployeeDto> findById(@Valid @PathVariable long id) throws DataNotFoundException {
         return ResponseEntity.ok().body(employeeService.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> update(@Valid @PathVariable long id, @RequestBody EmployeeDto dto){
+    public ResponseEntity<HttpStatus> update(@Valid @PathVariable long id, @RequestBody EmployeeDto dto) throws DataNotFoundException {
         employeeService.update(id, dto);
         return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> save(@Valid @RequestBody EmployeeDto dto){
-        employeeService.save(dto);
-        return ResponseEntity.accepted().body(HttpStatus.CREATED);
+    public ResponseEntity<EmployeeModel> save(@Valid @RequestBody EmployeeDto dto){
+        return ResponseEntity.accepted().body(employeeService.save(dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@Valid @PathVariable long id){
+    public ResponseEntity<HttpStatus> delete(@Valid @PathVariable long id) throws DataNotFoundException {
         employeeService.deleteEmployeeById(id);
         return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
     }

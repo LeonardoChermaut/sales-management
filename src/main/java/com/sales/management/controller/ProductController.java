@@ -1,10 +1,10 @@
 package com.sales.management.controller;
 
 import com.sales.management.dto.ProductDto;
+import com.sales.management.exception.DataNotFoundException;
 import com.sales.management.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,12 +26,12 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> findById(@Valid @PathVariable long id){
+    public ResponseEntity<ProductDto> findById(@Valid @PathVariable long id) throws DataNotFoundException {
         return ResponseEntity.ok().body(productService.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> update(@Valid @PathVariable long id, @RequestBody ProductDto dto){
+    public ResponseEntity<HttpStatus> update(@Valid @PathVariable long id, @RequestBody ProductDto dto) throws DataNotFoundException {
         productService.updateById(id, dto);
         return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
     }
@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@Valid @PathVariable long id){
+    public ResponseEntity<HttpStatus> delete(@Valid @PathVariable long id) throws DataNotFoundException {
         productService.deleteById(id);
         return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
     }

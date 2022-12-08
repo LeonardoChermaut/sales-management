@@ -1,6 +1,7 @@
 package com.sales.management.service;
 
 import com.sales.management.dto.ProductDto;
+import com.sales.management.exception.DataNotFoundException;
 import com.sales.management.model.ProductModel;
 import com.sales.management.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class ProductService {
 		productRepository.save(model);
 	}
 
-	public void deleteById(long id){
+	public void deleteById(long id) throws DataNotFoundException {
 		findByIdOrElseThrow(id);
 		productRepository.deleteById(id);
 	}
@@ -38,20 +39,20 @@ public class ProductService {
 				.collect(Collectors.toList());
 	}
 
-	public void updateById(long id, ProductDto dto)  {
-		ProductModel model = this.productRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+	public void updateById(long id, ProductDto dto) throws DataNotFoundException {
+		ProductModel model = this.productRepository.findById(id).orElseThrow(DataNotFoundException::new);
 		model.setName(dto.getName());
 		model.setPrice(bigDecimalToPrice(dto.getPrice()));
 		productRepository.save(model);
 	}
 
-	public ProductDto findById(long id) throws IllegalArgumentException {
+	public ProductDto findById(long id) throws DataNotFoundException {
 		return findByIdOrElseThrow(id);
 	}
 
-	private ProductDto findByIdOrElseThrow(long id) throws IllegalArgumentException{
+	private ProductDto findByIdOrElseThrow(long id) throws DataNotFoundException{
 		return productRepository.findById(id).map(model ->mapper.map(model, ProductDto.class))
-				.orElseThrow(IllegalArgumentException::new);
+				.orElseThrow(DataNotFoundException::new);
 	}
 	public BigDecimal bigDecimalToPrice (BigDecimal bd) {
 		val df = new DecimalFormat("0.00");

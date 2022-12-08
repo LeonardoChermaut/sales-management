@@ -1,6 +1,7 @@
 package com.sales.management.controller;
 
 import com.sales.management.dto.SaleDto;
+import com.sales.management.exception.DataNotFoundException;
 import com.sales.management.service.SaleService;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class SaleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SaleDto> findById(@Valid @PathVariable Long id){
+    public ResponseEntity<SaleDto> findById(@Valid @PathVariable Long id) throws DataNotFoundException {
         return ResponseEntity.ok().body(cartService.findById(id));
     }
 
@@ -44,7 +45,7 @@ public class SaleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@Valid @PathVariable long id){
+    public ResponseEntity<HttpStatus> delete(@Valid @PathVariable long id) throws DataNotFoundException {
         cartService.deleteById(id);
         return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
     }
