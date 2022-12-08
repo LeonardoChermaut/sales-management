@@ -28,5 +28,5 @@ public class EmployeeModel  implements Serializable {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employee")
-    private Set<SaleModel> sales;
+    private Set<CartItemModel> sales;
 }

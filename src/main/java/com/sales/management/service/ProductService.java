@@ -21,44 +21,39 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Transactional
 public class ProductService {
-	private  ProductRepository productRepository;
-	private final ModelMapper mapper = new ModelMapper();
-	public void save(ProductDto dto) {
+	private ProductRepository productRepository;
+	private ModelMapper mapper;
+	public ProductModel save(ProductDto dto) {
 		ProductModel model = mapper.map(dto, ProductModel.class);
 		model.setPrice(bigDecimalToPrice(dto.getPrice()));
-		productRepository.save(model);
+		return productRepository.save(model);
 	}
-
 	public void deleteById(long id) throws DataNotFoundException {
 		findByIdOrElseThrow(id);
 		productRepository.deleteById(id);
 	}
-
 	public List<ProductDto> listAll() {
 		return productRepository.findAll().stream().map(model -> mapper.map(model, ProductDto.class))
 				.collect(Collectors.toList());
 	}
-
 	public void updateById(long id, ProductDto dto) throws DataNotFoundException {
 		ProductModel model = this.productRepository.findById(id).orElseThrow(DataNotFoundException::new);
 		model.setName(dto.getName());
 		model.setPrice(bigDecimalToPrice(dto.getPrice()));
 		productRepository.save(model);
 	}
-
 	public ProductDto findById(long id) throws DataNotFoundException {
 		return findByIdOrElseThrow(id);
 	}
-
 	private ProductDto findByIdOrElseThrow(long id) throws DataNotFoundException{
 		return productRepository.findById(id).map(model ->mapper.map(model, ProductDto.class))
 				.orElseThrow(DataNotFoundException::new);
 	}
-	public BigDecimal bigDecimalToPrice (BigDecimal bd) {
+	public BigDecimal bigDecimalToPrice (BigDecimal price) {
 		val df = new DecimalFormat("0.00");
 		df.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.getDefault()));
-		df.format(bd);
-		return bd;
+		df.format(price);
+		return price;
 	}
 }
 

@@ -1,16 +1,11 @@
 package com.sales.management.configuration;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 
 import java.time.format.DateTimeFormatter;
 
@@ -18,35 +13,16 @@ import java.time.format.DateTimeFormatter;
 @Configuration
 public class JacksonConfiguration {
 
-    @AutoConfigureBefore({JacksonAutoConfiguration.class})
-    public class DateTimeAutoConfiguration {
-    }
+    private static final String datePattern = "dd/MM/yyyy";
+    private static final String dateTimePattern = "dd/MM/yyyy HH:mm:ss";
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer
-    jacksonObjectMapperBuilderCustomizer() {
-        return jacksonObjectMapperBuilder -> {
-            final String dateFormat = "dd/MM/yyyy";
-            final String timeFormat = "HH:mm";
-            final String dateTimeFormat = "dd/MM/yyyy HH:mm";
-            jacksonObjectMapperBuilder
-                    .serializers(
-                            new LocalDateSerializer(
-                                    DateTimeFormatter.ofPattern(dateFormat)))
-                    .deserializers(
-                            new LocalDateDeserializer(
-                                    DateTimeFormatter.ofPattern(dateFormat)))
-                    .serializers(
-                            new LocalTimeSerializer(
-                                    DateTimeFormatter.ofPattern(timeFormat)))
-                    .deserializers(
-                            new LocalTimeDeserializer(
-                                    DateTimeFormatter.ofPattern(timeFormat)))
-                    .serializers(
-                            new LocalDateTimeSerializer(
-                                    DateTimeFormatter.ofPattern(dateTimeFormat)))
-                    .deserializers(
-                            new LocalDateTimeDeserializer(
-                                    DateTimeFormatter.ofPattern(dateTimeFormat)));
+    public Jackson2ObjectMapperBuilderCustomizer localDateCustomizer() {
+        return builder -> {
+            builder.simpleDateFormat(dateTimePattern);
+            builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(datePattern)));
+            builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(dateTimePattern)));
         };
-    }}
+    }
+
+}

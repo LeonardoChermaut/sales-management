@@ -1,5 +1,6 @@
-package com.sales.management.exception;
+package com.sales.management.controller;
 
+import com.sales.management.exception.DataNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +11,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
-
     @ExceptionHandler(DataNotFoundException.class)
     public ResponseEntity<String> handleAccessDeniedException(Exception ex) {
         return new ResponseEntity<>(
                 ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
-
 }

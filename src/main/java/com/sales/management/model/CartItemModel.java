@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import java.io.Serializable;
@@ -18,8 +16,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "sale")
-public class SaleModel implements Serializable {
+@Table(name = "cart_item")
+public class CartItemModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,14 +31,15 @@ public class SaleModel implements Serializable {
 
     @FutureOrPresent
     @Column(name = "sale_date", nullable = false)
-    @JsonFormat(pattern= "dd/MM/yyyy HH:mm")
+    @JsonFormat(pattern="dd/MM/yyyy HH:mm")
     private LocalDateTime saleDate;
 
-    @ManyToOne
-    @JoinColumn(name="product_id", referencedColumnName="id")
+    @ManyToOne(targetEntity = ProductModel.class, fetch = FetchType.LAZY, cascade={ CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JoinColumn(name = "product_price", referencedColumnName = "price")
     private ProductModel product;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = EmployeeModel.class, fetch = FetchType.LAZY, cascade={ CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     @JoinColumn(name = "employee_name", referencedColumnName = "name")
     private EmployeeModel employee;

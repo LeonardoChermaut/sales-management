@@ -31,8 +31,10 @@ public class ProductModel  implements Serializable {
 	@Column(name= "price")
 	private BigDecimal price;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-	private Set<SaleModel> sales;
+	@OneToMany(mappedBy = "product",
+			fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL)
+	private Set<CartItemModel> sales;
 
 }
 

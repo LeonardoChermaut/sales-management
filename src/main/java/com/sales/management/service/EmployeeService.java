@@ -5,7 +5,6 @@ import com.sales.management.exception.DataNotFoundException;
 import com.sales.management.model.EmployeeModel;
 import com.sales.management.repository.EmployeeRepository;
 import lombok.AllArgsConstructor;
-import lombok.val;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 public class EmployeeService {
 
     private EmployeeRepository employeeRepository;
-    private final ModelMapper mapper = new ModelMapper();
+    private ModelMapper mapper;
 
     public EmployeeModel save(EmployeeDto dto) {
         EmployeeModel model = mapper.map(dto, EmployeeModel.class);
